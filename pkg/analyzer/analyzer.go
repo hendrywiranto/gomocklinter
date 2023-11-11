@@ -2,6 +2,7 @@ package analyzer
 
 import (
 	"go/ast"
+	"go/types"
 	"strings"
 
 	"golang.org/x/tools/go/analysis"
@@ -10,10 +11,11 @@ import (
 )
 
 const (
-	gomockController = "github.com/golang/mock/gomock.Controller"
-	gomock           = "gomock"
-	finish           = "Finish"
-	newController    = "NewController"
+	gomockControllerType = "github.com/golang/mock/gomock.Controller"
+	gomockPkg            = "github.com/golang/mock/gomock"
+	finish               = "Finish"
+	newControllerMethod  = "NewController"
+	testingType          = "*testing.T"
 )
 
 // New returns new gomockcontrollerfinish analyzer.
@@ -30,7 +32,9 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	inspector := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 	nodeFilter := []ast.Node{(*ast.CallExpr)(nil)}
 
-	// track if gomock.NewController(s.T()) is called in the current test file
+	// track if gomock.NewController(t) is called in the current test file
+	//
+	// note that it doesn't have to be t as args
 	var newControllerCalled bool
 
 	inspector.Preorder(nodeFilter, func(n ast.Node) {
@@ -39,7 +43,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			return
 		}
 
-		// Check if it's a test file
+		// check if it's a test file
 		if !isTestFile(pass.Fset.Position(callExpr.Pos()).Filename) {
 			return
 		}
@@ -49,21 +53,25 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			return
 		}
 
-		if selIdent, ok := selectorExpr.X.(*ast.Ident); ok && selIdent.Name == gomock && selectorExpr.Sel.Name == newController {
+		selIdent, ok := selectorExpr.X.(*ast.Ident)
+		if !ok {
+			return
+		}
+
+		// get pkg name if expression is from Go package
+		pkg, ok := pass.TypesInfo.ObjectOf(selIdent).(*types.PkgName)
+		// check if it's gomock pkg and method is NewController
+		if ok && strings.HasSuffix(pkg.Imported().Path(), gomockPkg) && selectorExpr.Sel.Name == newControllerMethod {
 			if len(callExpr.Args) == 1 {
-				argExpr, ok := callExpr.Args[0].(*ast.SelectorExpr)
-				if ok {
-					// check if it's gomock.NewController(s.T())
-					if tIdent, ok := argExpr.X.(*ast.Ident); ok && tIdent.Name == "s" && argExpr.Sel.Name == "T" {
-						newControllerCalled = true
-					}
+				if argType := pass.TypesInfo.TypeOf(callExpr.Args[0]); argType.String() == testingType {
+					newControllerCalled = true
 				}
 			}
 		}
 
 		// check for unnecessary call to gomock.Controller.Finish()
-		if newControllerCalled && pass.TypesInfo.TypeOf(callExpr).String() == gomockController && selectorExpr.Sel.Name == finish {
-			pass.Reportf(callExpr.Pos(), "since go1.14+, if you are passing a *testing.T to NewController() then calling Finish() on gomock.Controller is no longer needed")
+		if newControllerCalled && strings.HasSuffix(pass.TypesInfo.TypeOf(selIdent).String(), gomockControllerType) && selectorExpr.Sel.Name == finish {
+			pass.Reportf(selectorExpr.Sel.Pos(), "since go1.14, if you are passing a testing.T to NewController then calling Finish on gomock.Controller is no longer needed")
 		}
 	})
 

@@ -19,3 +19,8 @@ func TestFinishCallDefer(t *testing.T) {
 func TestNoFinishCall(t *testing.T) {
 	gomock.NewController(t)
 }
+
+func TestFinishCallWithoutT(t *testing.T) {
+	mock := gomock.NewController(nil)
+	mock.Finish()
+}

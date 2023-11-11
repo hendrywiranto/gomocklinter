@@ -3,6 +3,7 @@ package examples
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	gomick "github.com/golang/mock/gomock"
 )
 
@@ -18,4 +19,9 @@ func TestRenamedFinishCallDefer(t *testing.T) {
 
 func TestRenamedNoFinishCall(t *testing.T) {
 	gomick.NewController(t)
+}
+
+func TestRenamedFinishCallWithoutT(t *testing.T) {
+	mock := gomock.NewController(nil)
+	mock.Finish()
 }

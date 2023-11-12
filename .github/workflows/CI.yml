@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  go_install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rlespinasse/github-slug-action@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ^1.20
+      - run: cd /tmp && go install github.com/hendrywiranto/gomockcontrollerfinish@${{ env.GITHUB_REF_NAME }} && gomockcontrollerfinish -h
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.54.0
+          args: -v --timeout=5m
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ^1.20
+      - uses: actions/checkout@v3
+      - run: go test -coverprofile=coverage.out ./...
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: coverage.out

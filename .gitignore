@@ -1,2 +1,6 @@
 bin/
 vendor/
+
+# test coverage
+coverage.out
+coverage.html

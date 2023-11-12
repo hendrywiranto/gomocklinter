@@ -8,19 +8,33 @@ import (
 
 func TestFinishCall(t *testing.T) {
 	mock := gomock.NewController(t)
-	mock.Finish() // want "since go1.14, if you are passing a testing.T to NewController then calling Finish on gomock.Controller is no longer needed"
+	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
 func TestFinishCallDefer(t *testing.T) {
 	mock := gomock.NewController(t)
-	defer mock.Finish() // want "since go1.14, if you are passing a testing.T to NewController then calling Finish on gomock.Controller is no longer needed"
+	defer mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
+}
+
+func TestFinishCallWithoutT(t *testing.T) {
+	mock := gomock.NewController(nil)
+	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
+}
+
+func TestFinsihCallInAnotherFunction(t *testing.T) {
+	mock := gomock.NewController(t)
+	callFinish(mock)
+}
+
+func callFinish(mock *gomock.Controller) {
+	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
 func TestNoFinishCall(t *testing.T) {
 	gomock.NewController(t)
 }
 
-func TestFinishCallWithoutT(t *testing.T) {
-	mock := gomock.NewController(nil)
+func TestFinishCallOther(t *testing.T) {
+	mock := New()
 	mock.Finish()
 }

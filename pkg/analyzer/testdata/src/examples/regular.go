@@ -1,11 +1,11 @@
 package examples
 
-type testDummy string
+type testDummy struct{}
 
 func (td *testDummy) Finish() {}
 
-func New() testDummy {
-	return testDummy("this is a test")
+func New() *testDummy {
+	return &testDummy{}
 }
 
 func Finish() {

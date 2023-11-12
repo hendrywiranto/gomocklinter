@@ -22,6 +22,15 @@ func TestRenamedNoFinishCall(t *testing.T) {
 }
 
 func TestRenamedFinishCallWithoutT(t *testing.T) {
-	mock := gomock.NewController(nil)
-	mock.Finish()
+	mock := gomick.NewController(nil)
+	mock.Finish() // want "since go1.14, if you are passing a testing.T to NewController then calling Finish on gomock.Controller is no longer needed"
+}
+
+func TestRenamedFinsihCallInAnotherFunction(t *testing.T) {
+	mock := gomick.NewController(t)
+	renamedCallFinish(mock)
+}
+
+func renamedCallFinish(mock *gomock.Controller) {
+	mock.Finish() // want "since go1.14, if you are passing a testing.T to NewController then calling Finish on gomock.Controller is no longer needed"
 }

@@ -12,7 +12,7 @@ import (
 const (
 	gomockControllerType = "mock/gomock.Controller"
 	finish               = "Finish"
-	reportMsg            = "since go1.14, if you are passing a testing.T to NewController then calling Finish on gomock.Controller is no longer needed"
+	reportMsg            = "calling Finish on gomock.Controller is no longer needed"
 )
 
 // New returns new gomockcontrollerfinish analyzer.
@@ -52,7 +52,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 		// check for unnecessary call to gomock.Controller.Finish()
 		if strings.HasSuffix(pass.TypesInfo.TypeOf(selIdent).String(), gomockControllerType) && selectorExpr.Sel.Name == finish {
-			pass.Reportf(selectorExpr.Sel.Pos(), reportMsg)
+			pass.Reportf(callExpr.Pos(), reportMsg)
 		}
 	})
 

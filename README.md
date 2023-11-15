@@ -7,6 +7,8 @@
 
 A linter that checks whether an unnecessary call to .Finish() on gomock.Controller exists
 
+Note: The original [golang/mock](https://github.com/golang/mock) package is archived and the maintained fork is [go.uber.org/mock](https://github.com/uber/mock). This linter supports both.
+
 ## Installation & usage
 
 ```
@@ -14,7 +16,7 @@ $ go install github.com/hendrywiranto/gomockcontrollerfinish@latest
 $ gomockcontrollerfinish ./...
 ```
 
-or use `go vet`
+or build the binary and use `go vet`
 ```
 $ go build -o gomockcontrollerfinish main.go
 $ go vet -vettool=./gomockcontrollerfinish ./...

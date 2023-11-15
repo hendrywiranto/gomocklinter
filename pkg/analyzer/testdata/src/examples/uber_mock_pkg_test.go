@@ -1,42 +1,41 @@
 package examples_test
 
 import (
+	"examples"
 	"testing"
 
-	"examples"
-
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 )
 
-func TestFinishCall(t *testing.T) {
+func TestUberFinishCall(t *testing.T) {
 	mock := gomock.NewController(t)
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestFinishCallDefer(t *testing.T) {
+func TestUberFinishCallDefer(t *testing.T) {
 	mock := gomock.NewController(t)
 	defer mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestFinishCallWithoutT(t *testing.T) {
+func TestUberFinishCallWithoutT(t *testing.T) {
 	mock := gomock.NewController(nil)
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestFinsihCallInAnotherFunction(t *testing.T) {
+func TestUberFinsihCallInAnotherFunction(t *testing.T) {
 	mock := gomock.NewController(t)
-	callFinish(mock)
+	callUberFinish(mock)
 }
 
-func callFinish(mock *gomock.Controller) {
+func callUberFinish(mock *gomock.Controller) {
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestNoFinishCall(t *testing.T) {
+func TestUberNoFinishCall(t *testing.T) {
 	gomock.NewController(t)
 }
 
-func TestFinishCallOther(t *testing.T) {
+func TestUberFinishCallOther(t *testing.T) {
 	mock := examples.New()
 	mock.Finish()
 }

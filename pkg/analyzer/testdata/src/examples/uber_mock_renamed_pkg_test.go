@@ -3,33 +3,33 @@ package examples_test
 import (
 	"testing"
 
-	gomick "github.com/golang/mock/gomock"
+	gomick "go.uber.org/mock/gomock"
 )
 
-func TestRenamedFinishCall(t *testing.T) {
+func TestUberRenamedFinishCall(t *testing.T) {
 	mock := gomick.NewController(t)
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestRenamedFinishCallDefer(t *testing.T) {
+func TestUberRenamedFinishCallDefer(t *testing.T) {
 	mock := gomick.NewController(t)
 	defer mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestRenamedFinishCallWithoutT(t *testing.T) {
+func TestUberRenamedFinishCallWithoutT(t *testing.T) {
 	mock := gomick.NewController(nil)
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestRenamedFinsihCallInAnotherFunction(t *testing.T) {
+func TestUberRenamedFinsihCallInAnotherFunction(t *testing.T) {
 	mock := gomick.NewController(t)
-	renamedCallFinish(mock)
+	uberRenamedCallFinish(mock)
 }
 
-func renamedCallFinish(mock *gomick.Controller) {
+func uberRenamedCallFinish(mock *gomick.Controller) {
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"
 }
 
-func TestRenamedNoFinishCall(t *testing.T) {
+func TestUberRenamedNoFinishCall(t *testing.T) {
 	gomick.NewController(t)
 }

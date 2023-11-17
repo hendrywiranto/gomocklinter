@@ -6,6 +6,8 @@ import (
 	gomick "github.com/golang/mock/gomock"
 )
 
+// This file tests that the linter will still work even if the gomock from the original golang package is renamed
+
 func TestRenamedFinishCall(t *testing.T) {
 	mock := gomick.NewController(t)
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"

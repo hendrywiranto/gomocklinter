@@ -35,11 +35,6 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			return
 		}
 
-		// check if it's a test file
-		if !isTestFile(pass.Fset.Position(callExpr.Pos()).Filename) {
-			return
-		}
-
 		selectorExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
 		if !ok {
 			return
@@ -57,9 +52,4 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	})
 
 	return nil, nil
-}
-
-// isTestFile checks if the file is a test file based on its name.
-func isTestFile(filename string) bool {
-	return strings.HasSuffix(filename, "_test.go")
 }

@@ -10,18 +10,17 @@ import (
 )
 
 const (
-	finish     = "Finish"
 	reportMsg  = "calling Finish on gomock.Controller is no longer needed"
 	mock       = "mock"
 	controller = "gomock.Controller"
+	pkgLen     = 3
+	finish     = "Finish"
 )
 
-var (
-	pkgSourcesMap = map[string]bool{
-		"golang":      true,
-		"go.uber.org": true,
-	}
-)
+var pkgSourcesMap = map[string]bool{
+	"golang":      true,
+	"go.uber.org": true,
+}
 
 // New returns new gomockcontrollerfinish analyzer.
 func New() *analysis.Analyzer {
@@ -66,16 +65,16 @@ func run(pass *analysis.Pass) (interface{}, error) {
 // currently supports golang/mock/gomock.Controller and go.uber.org/mock/gomock.Controller
 //
 // value of t can be *examples/vendor/go.uber.org/mock/gomock.Controller
-// hence the checking is only the last 3 part
+// hence the checking is only the last 3 part.
 func isValidType(t string) bool {
 	strs := strings.Split(t, "/")
 
-	if len(strs) < 3 {
+	if len(strs) < pkgLen {
 		return false
 	}
 
 	// get the last 3 elements
-	strs = strs[len(strs)-3:]
+	strs = strs[len(strs)-pkgLen:]
 
 	// first element has to be either golang or go.uber.org
 	// second element has to be mock

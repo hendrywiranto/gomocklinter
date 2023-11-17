@@ -8,6 +8,8 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
+// This file tests that the linter will still work if the gomock is from the original golang package
+
 func TestFinishCall(t *testing.T) {
 	mock := gomock.NewController(t)
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"

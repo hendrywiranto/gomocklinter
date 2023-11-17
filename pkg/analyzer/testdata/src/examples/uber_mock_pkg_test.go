@@ -7,6 +7,8 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+// This file tests that the linter will still work even if the gomock is from the go.uber.org fork
+
 func TestUberFinishCall(t *testing.T) {
 	mock := gomock.NewController(t)
 	mock.Finish() // want "calling Finish on gomock.Controller is no longer needed"

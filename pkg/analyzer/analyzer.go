@@ -22,11 +22,11 @@ var pkgSourcesMap = map[string]bool{
 	"go.uber.org": true,
 }
 
-// New returns new gomockcontrollerfinish analyzer.
+// New returns new gomocklinter analyzer.
 func New() *analysis.Analyzer {
 	return &analysis.Analyzer{
-		Name:     "gomockcontrollerfinish",
-		Doc:      "Checks whether an unnecessary call to .Finish() on gomock.Controller exists",
+		Name:     "gomocklinter",
+		Doc:      "Checks the usage of go mocking libraries",
 		Run:      run,
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
 	}

@@ -6,10 +6,10 @@ import (
 	"golang.org/x/tools/go/analysis/analysistest"
 
 	"github.com/gostaticanalysis/testutil"
-	"github.com/hendrywiranto/gomockcontrollerfinish/pkg/analyzer"
+	"github.com/hendrywiranto/gomocklinter/pkg/analyzer"
 )
 
-func TestGomockControllerFinish(t *testing.T) {
+func TestGoMockLinter(t *testing.T) {
 	pkgs := []string{
 		"examples",
 	}

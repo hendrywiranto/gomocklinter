@@ -1,4 +1,4 @@
-module github.com/hendrywiranto/gomockcontrollerfinish
+module github.com/hendrywiranto/gomocklinter
 
 go 1.20
 

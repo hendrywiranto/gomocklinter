@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: ^1.20
-      - run: cd /tmp && go install github.com/hendrywiranto/gomockcontrollerfinish@${{ env.GITHUB_REF_NAME }} && gomockcontrollerfinish -h
+      - run: cd /tmp && go install github.com/hendrywiranto/gomocklinter@${{ env.GITHUB_REF_NAME }} && gomocklinter -h
 
   lint:
     runs-on: ubuntu-latest

@@ -3,7 +3,7 @@ package main
 import (
 	"golang.org/x/tools/go/analysis/singlechecker"
 
-	"github.com/hendrywiranto/gomockcontrollerfinish/pkg/analyzer"
+	"github.com/hendrywiranto/gomocklinter/pkg/analyzer"
 )
 
 func main() {

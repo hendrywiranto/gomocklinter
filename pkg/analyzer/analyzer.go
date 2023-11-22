@@ -61,7 +61,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 }
 
 // isValidType checks whether t is a valid package source for gomock controller or not
-// currently supports github.com/golang/mock/gomock.Controller and go.uber.org/mock/gomock.Controller
+// currently supports github.com/golang/mock/gomock.Controller and go.uber.org/mock/gomock.Controller.
 func isValidType(t string) bool {
 	if t[0] != '*' {
 		return false

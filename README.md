@@ -23,6 +23,30 @@ $ go build -o gomocklinter main.go
 $ go vet -vettool=./gomocklinter ./...
 ```
 
+### Autofix
+
+Autofix is supported that will delete the entire line with `.Finish()` call to `gomock.Controller`  
+
+```
+$ ./gomocklinter -fix ./...
+```
+
+Please note that, there may be some adjustments need to be done by hand after this action
+
+```
+// Before
+func TestFoo(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish() // will be deleted entirely
+}
+
+// After
+func TestFoo(t *testing.T) {
+	ctrl := gomock.NewController(t)	
+}
+```
+
+
 ## Motivation
 As highlighted in https://pkg.go.dev/github.com/golang/mock/gomock#NewController
 
@@ -32,12 +56,12 @@ As highlighted in https://pkg.go.dev/github.com/golang/mock/gomock#NewController
 ```
 // Bad
 func TestFoo(t *testing.T) {
-	mock := gomock.NewController(t)
-	defer mock.Finish() // no need to call this since go1.14
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish() // no need to call this since go1.14
 }
 
 // Good
 func TestFoo(t *testing.T) {
-	mock := gomock.NewController(t)	
+	ctrl := gomock.NewController(t)
 }
 ```

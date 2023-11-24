@@ -53,7 +53,40 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 		// check for unnecessary call to gomock.Controller.Finish()
 		if isValidType(pass.TypesInfo.TypeOf(selIdent).String()) && selectorExpr.Sel.Name == finish {
-			pass.Reportf(callExpr.Pos(), reportMsg)
+			// Get the token.File associated with the callExpr
+			f := pass.Fset.File(callExpr.Pos())
+
+			// Get the line number of the callExpr
+			line := f.Line(callExpr.Pos())
+
+			// Get the start position of the line
+			lineStartPos := f.LineStart(line)
+
+			// Get the start position of the next line
+			nextLineStartPos := f.LineStart(line + 1)
+
+			// Calculate the end position of the line
+			lineEndPos := nextLineStartPos - 1
+
+			// Create a fix to delete the line
+			fix := analysis.SuggestedFix{
+				Message: "Remove unnecessary call to Finish",
+				TextEdits: []analysis.TextEdit{
+					{
+						Pos:     lineStartPos,
+						End:     lineEndPos,
+						NewText: []byte(""),
+					},
+				},
+			}
+
+			// Add the fix to the diagnostic report
+			diagnostic := analysis.Diagnostic{
+				Pos:            callExpr.Pos(),
+				Message:        reportMsg,
+				SuggestedFixes: []analysis.SuggestedFix{fix},
+			}
+			pass.Report(diagnostic)
 		}
 	})
 
